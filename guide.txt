@@ -1,0 +1,7 @@
+in kaggle i create URL and use that in the local dev 
+
+** Have single ngrok-URL** 
+Endpoints :  
+    1) `{ngrok_URL}/ollama/api/generate` have two models hf.co/Rohit-Katkar2003/mistral-7b-100steps-gguf:Q4_K_M and hf.co/gpustack/bge-m3-GGUF:Q4_K_M
+    2) `{ngrok_URL}/laya/v1/systemone` have single classification model 
+
