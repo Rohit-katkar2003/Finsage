@@ -9,15 +9,34 @@ class LLMClient:
         self.LLM_model_url = f"{self.ngrok_url}/ollama/api/generate" # this only for text generation model 
         self.embedding_model_url = f"{self.ngrok_url}/ollama/api/embed" 
         self.classification_url = f"{self.ngrok_url}/laya/v1/chat/completions" 
-
+        self.reranker_model_url = f"{self.ngrok_url}/ollama/api/rerank"
         self.client =httpx.Client(
             timeout=120.0
         )
 
+    def chat(self, messages: list[dict], temperature: float = 0.1,
+        max_tokens: int = 512) -> str:
+        payload = {
+            "model": self.settings.LLM_MODEL,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "stream": False,
+        }
+        r = self.client.post(self.classification_url, json=payload, timeout=120)
+        r.raise_for_status()
+        data = r.json()
+        # OpenAI-style response
+        return data["choices"][0]["message"]["content"]
 
-    def generate(self , prompt:str , temperature:float=0.1,max_tokens:int=512): 
+    
+    def generate(self , messages:list[dict] , temperature:float=0.1,max_tokens:int=512): 
         llm_model = self.settings.LLM_MODEL 
 
+        prompt = "\n\n".join(
+            f"{message['role']}: {message['content']}"
+            for message in messages
+        )
         payload = {
             "model": llm_model,
             "prompt": prompt,
@@ -27,13 +46,14 @@ class LLMClient:
                 "max_tokens":max_tokens
             },
         }
-
+        # print(f"LLM MODEL : {llm_model}")
+        # print(f"LLM MODEL URL : {self.LLM_model_url}")
         response = self.client.post(
             self.LLM_model_url,
             json=payload,
         )
 
-        response.raise_for_status()
+        # response.raise_for_status()
 
         data = response.json()
 

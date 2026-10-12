@@ -18,7 +18,7 @@ class Settings:
     EMBEDDING_MODEL: str
     LLM_MODEL: str
     CLASSIFICATION_MODEL: str
-
+    NEWS_API : str 
     GUARDRAIL_LLM_ENABLED: bool
     GUARDRAIL_FAIL_OPEN: bool
     GUARDRAIL_BLOCK_CONFIDENCE: float
@@ -56,7 +56,7 @@ def get_settings() -> Settings:
         EMBEDDING_MODEL=os.getenv("EMBEDDING_MODEL", ""),
         LLM_MODEL=os.getenv("LLM_MODEL", ""),
         CLASSIFICATION_MODEL=os.getenv("CLASSIFICATION_MODEL", ""),
-
+        NEWS_API= os.getenv("NEWS_API" , "") , 
         GUARDRAIL_LLM_ENABLED=str_to_bool(
             os.getenv("GUARDRAIL_LLM_ENABLED", "true")
         ),
@@ -77,3 +77,5 @@ def get_settings() -> Settings:
             os.getenv("MIN_QUERY_CHARS", "3")
         ),
     )
+
+# CLIENT = LLMClient()
